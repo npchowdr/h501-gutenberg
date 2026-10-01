@@ -14,7 +14,7 @@ def get_data():
 
     #join the two dataframes on the gutenberg_author_id column
     metadata_df.drop(columns=["author"], inplace=True)
-    joined_df = metadata_df.merge(authors_df, on="gutenberg_author_id", how="inner")
+    joined_df = metadata_df.merge(authors_df, on="gutenberg_author_id", how="left")
     joined_df["author_alias"] = joined_df["alias"]
 
     return joined_df

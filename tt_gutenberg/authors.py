@@ -12,9 +12,3 @@ def list_authors(by_languages=True, alias=True):
           lambda s: len({lang for entry in s.astype(str) for lang in entry.split("/")})
       )
       return counts.sort_values(ascending=False).index.tolist()
-    
-    # if alias:
-    #     counts = merged_df.groupby("author_alias")["gutenberg_id"].agg(
-    #     lambda s: len({book for book in s})
-    #     )
-    #     return counts.sort_values(ascending=False).index.tolist()

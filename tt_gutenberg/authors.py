@@ -3,24 +3,12 @@ from .transform import get_data, clean_aliases
 
 def list_authors(by_languages=True, alias=True):
     """Return author aliases ordered from most to fewest translations."""
-    authors = get_data(name="authors")[["gutenberg_author_id", "alias"]].copy()
-    authors["alias"] = clean_aliases(authors["alias"])
-    authors = authors.dropna(subset=["alias"])
+    merged_df = get_data()
+    merged_df["author_alias"] = clean_aliases(merged_df["author_alias"])
+    merged_df.dropna(subset=["author_alias"], inplace=True)
 
-    metadata = get_data(name="metadata")[["gutenberg_id", "gutenberg_author_id"]]
-    languages = get_data(name="languages")[["gutenberg_id", "language"]]
-
-    df = (
-        metadata.dropna(subset=["gutenberg_author_id"])
-        .merge(languages, on="gutenberg_id")
-        .merge(authors, on="gutenberg_author_id")
-        .drop_duplicates(subset=["gutenberg_id", "language", "gutenberg_author_id"])
-    )
-
-    counts = (
-        df.groupby("alias")
-        .size()
-        .reset_index(name="translations")
-        .sort_values(["translations", "alias"], ascending=[False, True])
-    )
-    return counts["alias"].tolist()
+    if by_languages and alias:
+      counts = merged_df.groupby("author_alias")["language"].agg(
+          lambda s: len({lang for entry in s.astype(str) for lang in entry.split("/")})
+      )
+      return counts.sort_values(ascending=False).index.tolist()

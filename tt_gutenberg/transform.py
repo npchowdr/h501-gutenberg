@@ -1,19 +1,23 @@
 import pandas as pd
 
+from tt_gutenberg import authors
+
 DATA = {
     "gutenberg_authors":  "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-06-03/gutenberg_authors.csv",
-    "gutenberg_languages": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-06-03/gutenberg_languages.csv",
+    "gutenberg_metadata": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-06-03/gutenberg_metadata.csv",
 }
 
-def base_url():
-    return (
-        "https://raw.githubusercontent.com/rfordatascience/tidytuesday/"
-        "main/data/2025/2025-06-03/"
-    )
+def get_data():
+    """Load one of the gutenberg_*.csv tables, e.g. 'authors' or 'metadata'."""
+    authors_df = pd.read_csv(DATA["gutenberg_authors"])
+    metadata_df = pd.read_csv(DATA["gutenberg_metadata"])
 
-def get_data(name):
-    """Load one of the gutenberg_*.csv tables, e.g. 'authors' or 'languages'."""
-    return pd.read_csv(f"{base_url()}gutenberg_{name}.csv")
+    #join the two dataframes on the gutenberg_author_id column
+    metadata_df.drop(columns=["author"], inplace=True)
+    joined_df = metadata_df.merge(authors_df, on="gutenberg_author_id", how="left")
+    joined_df["author_alias"] = joined_df["alias"]
+
+    return joined_df
 
 
 def clean_aliases(series):

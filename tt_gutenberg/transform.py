@@ -1,6 +1,6 @@
 import pandas as pd
 
-DATA = {}
+#DATA = {}
 
 def base_url():
     return (

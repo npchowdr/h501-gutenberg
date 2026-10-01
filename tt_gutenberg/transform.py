@@ -12,7 +12,7 @@ def get_data():
     return authors_df, metadata_df
 
 
-# def clean_aliases(series):
-#     """Trim aliases and replace blank or letterless values with NA."""
-#     cleaned = series.astype("string").str.strip()
-#     return cleaned.where(cleaned.str.contains(r"[A-Za-z]", na=False))
+def clean_aliases(series):
+    """Trim aliases and replace blank or letterless values with NA."""
+    cleaned = series.astype("string").str.strip()
+    return cleaned.where(cleaned.str.contains(r"[A-Za-z]", na=False))

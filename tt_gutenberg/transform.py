@@ -8,7 +8,7 @@ def base_url():
     )
 
 
-def load_table(name):
+def get_data(name):
     """Load one of the gutenberg_*.csv tables, e.g. 'authors' or 'languages'."""
     return pd.read_csv(f"{base_url()}gutenberg_{name}.csv")
 

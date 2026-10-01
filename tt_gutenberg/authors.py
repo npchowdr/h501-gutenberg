@@ -1,14 +1,14 @@
-from .data_utils import load_table, clean_aliases
+from .transform import get_data, clean_aliases
 
 
 def list_authors(by_languages=True, alias=True):
     """Return author aliases ordered from most to fewest translations."""
-    authors = load_table("authors")[["gutenberg_author_id", "alias"]].copy()
+    authors = get_data("authors")[["gutenberg_author_id", "alias"]].copy()
     authors["alias"] = clean_aliases(authors["alias"])
     authors = authors.dropna(subset=["alias"])
 
-    metadata = load_table("metadata")[["gutenberg_id", "gutenberg_author_id"]]
-    languages = load_table("languages")[["gutenberg_id", "language"]]
+    metadata = get_data("metadata")[["gutenberg_id", "gutenberg_author_id"]]
+    languages = get_data("languages")[["gutenberg_id", "language"]]
 
     df = (
         metadata.dropna(subset=["gutenberg_author_id"])

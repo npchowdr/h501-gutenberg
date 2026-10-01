@@ -13,11 +13,8 @@ def get_data():
     metadata_df = pd.read_csv(DATA["gutenberg_metadata"])
 
     #join the two dataframes on the gutenberg_author_id column
+    metadata_df.drop(columns=["author"], inplace=True)
     joined_df = metadata_df.merge(authors_df, on="gutenberg_author_id", how="inner")
-
-    #drop the duplicated author_y column and rename author_x to author
-    joined_df.drop(columns=["author_y"], inplace=True)
-    joined_df = joined_df.rename(columns={"author_x": "author"})
     joined_df["author_alias"] = joined_df["alias"]
 
     return joined_df
